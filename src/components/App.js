@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, Switch, NavLink, useRouteMatch, useParams } from 'react-router-dom';
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
@@ -108,27 +109,33 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
             {/* Header section */}
             <Header />
-            {/* Main content */}
-            <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} 
-                onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
 
-            {/* Footer section */}
-            <Footer />
+            <Switch>
+                <Route exact path='/'>
+                    {/* Main content */}
+                    <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} 
+                        onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
 
-            {/* Popup Edit User Info Form */}
-            <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+                    {/* Footer section */}
+                    <Footer />
 
-            {/* Popup Edit User Pic Form */}
-            <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+                    {/* Popup Edit User Info Form */}
+                    <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
-            {/* Popup Add Form */}
-            <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace}/>
+                    {/* Popup Edit User Pic Form */}
+                    <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
 
-            {/* Popup Delete Form */}
-            <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
+                    {/* Popup Add Form */}
+                    <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace}/>
 
-            {/* Image Popup */}
-            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+                    {/* Popup Delete Form */}
+                    <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
+
+                    {/* Image Popup */}
+                    <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+                </Route>
+            </Switch>
+            
         </CurrentUserContext.Provider>
     );
 }
