@@ -134,6 +134,9 @@ function App() {
                     {/* Image Popup */}
                     <ImagePopup card={selectedCard} onClose={closeAllPopups} />
                 </Route>
+                <Route>
+                    
+                </Route>
             </Switch>
             
         </CurrentUserContext.Provider>
