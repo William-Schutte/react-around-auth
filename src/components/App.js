@@ -10,6 +10,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
+import Register from './Register.js';
 
 function App() {
 
@@ -31,7 +32,7 @@ function App() {
 
     // Selected card hook for state of Image Popup
     const [selectedCard, setSelectedCard] = React.useState(null);
-    
+
     function handleEditAvatarClick() {
         setIsEditAvatarOpen(true);
     }
@@ -39,7 +40,7 @@ function App() {
     function handleEditProfileClick() {
         setIsEditProfileOpen(true);
     }
-    
+
     function handleAddPlaceClick() {
         setIsAddPlaceOpen(true);
     }
@@ -78,7 +79,7 @@ function App() {
             .then((res) => {setCards(res);})
             .catch((err) => {console.log(err)});
     }, []);
-    
+
     function handleCardLike(card) {
         const isLiked = card.likes.some(i => i._id === currentUser._id);
         api.likeCard(card, isLiked)
@@ -104,7 +105,7 @@ function App() {
                 setCards(newCards);
             });
     }
-    
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             {/* Header section */}
@@ -113,7 +114,7 @@ function App() {
             <Switch>
                 <Route exact path='/'>
                     {/* Main content */}
-                    <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} 
+                    <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick}
                         onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
 
                     {/* Footer section */}
@@ -134,11 +135,14 @@ function App() {
                     {/* Image Popup */}
                     <ImagePopup card={selectedCard} onClose={closeAllPopups} />
                 </Route>
-                <Route>
-                    
+                <Route path='/signin'>
+
+                </Route>
+                <Route path='/signup'>
+                    <Register />
                 </Route>
             </Switch>
-            
+
         </CurrentUserContext.Provider>
     );
 }
