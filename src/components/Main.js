@@ -1,6 +1,8 @@
 import React from 'react';
 import Card from './Card.js';
 import CurrentUserContext from '../contexts/CurrentUserContext.js';
+import Header from './Header';
+import Footer from './Footer';
 
 function Main(props) {
 
@@ -8,6 +10,8 @@ function Main(props) {
     const currentUser = React.useContext(CurrentUserContext);
 
     return (
+        <>
+        <Header />
         <main className="content">
             {/* Profile section at top of page, contains three buttons for editing profile and cards */}
             <section className="profile">
@@ -30,6 +34,8 @@ function Main(props) {
                 </ul>
             </section>
         </main>
+        <Footer />
+        </>
     );
 }
 

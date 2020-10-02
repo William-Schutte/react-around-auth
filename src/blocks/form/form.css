@@ -10,6 +10,8 @@
 @import url('./__title/form__title.css');
 @import url('./__input-field/form__input-field.css');
 @import url('./__input/form__input.css');
+@import url('./__tool-tip/form__tool-tip.css');
+@import url('./__tool-icon/form__tool-icon.css');
 
 .form {
     position: fixed;

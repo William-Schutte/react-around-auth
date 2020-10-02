@@ -3,6 +3,6 @@
 }
 
 .btn-animate:not(.form__save-button_disabled):hover {
-    opacity: .8;
+    opacity: .6;
     cursor: pointer;
 }

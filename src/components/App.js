@@ -1,8 +1,6 @@
 import React from 'react';
 import { Route, Switch, NavLink, useRouteMatch, useParams } from 'react-router-dom';
-import Header from './Header.js';
 import Main from './Main.js';
-import Footer from './Footer.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import api from '../utils/api.js';
@@ -10,7 +8,10 @@ import CurrentUserContext from '../contexts/CurrentUserContext.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
-import Register from './Register.js';
+import ProtectedRoute from './ProtectedRoute';
+import Register from './Register';
+import Login from './Login';
+import InfoToolTip from './InfoToolTip'
 
 function App() {
 
@@ -20,8 +21,8 @@ function App() {
     // i.e. one update after the API call
     React.useEffect(() => {
         api.getUserInfo()
-            .then((res) => {setCurrentUser(res);})
-            .catch((err) => {console.log(err)});
+            .then((res) => { setCurrentUser(res); })
+            .catch((err) => { console.log(err) });
     }, []);
 
 
@@ -29,6 +30,7 @@ function App() {
     const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
     const [isAddPlaceOpen, setIsAddPlaceOpen] = React.useState(false);
     const [isEditAvatarOpen, setIsEditAvatarOpen] = React.useState(false);
+    const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false);
 
     // Selected card hook for state of Image Popup
     const [selectedCard, setSelectedCard] = React.useState(null);
@@ -45,10 +47,15 @@ function App() {
         setIsAddPlaceOpen(true);
     }
 
+    function handleAuthRegClick() {
+        setIsInfoToolTipOpen(true);
+    }
+
     function closeAllPopups() {
         setIsEditAvatarOpen(false);
         setIsEditProfileOpen(false);
         setIsAddPlaceOpen(false);
+        setIsInfoToolTipOpen(false);
         setSelectedCard(null);
     }
 
@@ -58,14 +65,14 @@ function App() {
 
     function handleUpdateUser(newInfo) {
         api.patchUserInfo(newInfo)
-            .then((res) => {setCurrentUser(res)})
-            .catch((err) => {console.log(err)});
+            .then((res) => { setCurrentUser(res) })
+            .catch((err) => { console.log(err) });
     }
 
     function handleUpdateAvatar(avatar) {
         api.patchUserPic(avatar)
-            .then((res) => {setCurrentUser(res)})
-            .catch((err) => {console.log(err)});
+            .then((res) => { setCurrentUser(res) })
+            .catch((err) => { console.log(err) });
     }
 
     // Card variables and functions
@@ -76,8 +83,8 @@ function App() {
     // Effect hook for updating of user info and cards
     React.useEffect(() => {
         api.getInitialCards()
-            .then((res) => {setCards(res);})
-            .catch((err) => {console.log(err)});
+            .then((res) => { setCards(res); })
+            .catch((err) => { console.log(err) });
     }, []);
 
     function handleCardLike(card) {
@@ -108,40 +115,34 @@ function App() {
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
-            {/* Header section */}
-            <Header />
-
             <Switch>
-                <Route exact path='/'>
-                    {/* Main content */}
-                    <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick}
-                        onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
-
-                    {/* Footer section */}
-                    <Footer />
-
-                    {/* Popup Edit User Info Form */}
-                    <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-
-                    {/* Popup Edit User Pic Form */}
-                    <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
-
-                    {/* Popup Add Form */}
-                    <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace}/>
-
-                    {/* Popup Delete Form */}
-                    <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
-
-                    {/* Image Popup */}
-                    <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+                <ProtectedRoute exact path="/" component={Main} loggedIn={false} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
+                <Route path='/signup'>
+                    <Register onClick={handleAuthRegClick} />
                 </Route>
                 <Route path='/signin'>
-
-                </Route>
-                <Route path='/signup'>
-                    <Register />
+                    <Login onClick={handleAuthRegClick} />
                 </Route>
             </Switch>
+            
+            {/* Popup ToolTip for Registration/Login */}
+            <InfoToolTip isOpen={isInfoToolTipOpen} success={false} onClose={closeAllPopups} />    
+
+            {/* Popup Edit User Info Form */}
+            <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+
+            {/* Popup Edit User Pic Form */}
+            <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+
+            {/* Popup Add Form */}
+            <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
+
+            {/* Popup Delete Form */}
+            <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
+
+            {/* Image Popup */}
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
         </CurrentUserContext.Provider>
     );
