@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Main from './Main.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
@@ -14,159 +14,178 @@ import Login from './Login';
 import InfoToolTip from './InfoToolTip'
 import * as auth from '../utils/auth.js';
 
-function App() {
+class App extends React.Component {
+    constructor() {
+        super();
+        this.state={
+            isLoggedIn: null,
+            userEmail: '',
+            currentUser: {},
+            isEditProfileOpen: false,
+            isAddPlaceOpen: false,
+            isEditAvatarOpen: false,
+            isInfoToolTipOpen: false,
+            regSuccess: false,
+            selectedCard: null,
+            cards: [],
+        }
+        this.handleEditAvatarClick = this.handleEditAvatarClick.bind(this);
+        this.handleEditProfileClick = this.handleEditProfileClick.bind(this);
+        this.handleAddPlaceClick = this.handleAddPlaceClick.bind(this);
+        this.handleAuthRegClick = this.handleAuthRegClick.bind(this);
+        this.closeAllPopups = this.closeAllPopups.bind(this);
+        this.handleCardClick = this.handleCardClick.bind(this);
+        this.handleUpdateUser = this.handleUpdateUser.bind(this);
+        this.handleUpdateAvatar = this.handleUpdateAvatar.bind(this);
+        this.handleCardLike = this.handleCardLike.bind(this);
+        this.handleCardDelete = this.handleCardDelete.bind(this);
+        this.handleAddPlace= this.handleAddPlace.bind(this);
+        this.handleSetLoggedIn = this.handleSetLoggedIn.bind(this);
+    }
 
-    // State variable fot the current user's info
-    const [currentUser, setCurrentUser] = React.useState({});
-    // The effect hook with an empty second parameter will update once upon mounting,
-    // i.e. one update after the API call
-    React.useEffect(() => {
-        api.getUserInfo()
-            .then((res) => { setCurrentUser(res); })
-            .catch((err) => { console.log(err) });
-    }, []);
+    componentDidMount() {
+        // Get user info for profile section
+        api.getUserInfo().then((res) => { 
+            this.setState({ currentUser: res}); 
+        }).catch((err) => { 
+            console.log(err) 
+        });
+        
+        // Get initial cards
+        api.getInitialCards().then((res) => { 
+            this.setState({ cards: res}); 
+        }).catch((err) => { 
+            console.log(err) 
+        });
 
-    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    React.useEffect(() => {
+        // Check if user has jwt token
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
             auth.getUser(jwt).then((res) => {
                 if (res) {
-                    console.log('Made it to the token check on mount')
-                    console.log(isLoggedIn);
+                    this.setState({ isLoggedIn: true });
                 }
             }).then(() => {
-                setIsLoggedIn(true);
+                this.props.history.push('/'); ;
             });
-        }
-        
-    });
-
-    // Declaration of three hooks that act as state variables for the visibility of each form
-    const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
-    const [isAddPlaceOpen, setIsAddPlaceOpen] = React.useState(false);
-    const [isEditAvatarOpen, setIsEditAvatarOpen] = React.useState(false);
-    const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false);
-    const [regSuccess, setRegSuccess] = React.useState(false);
-
-    // Selected card hook for state of Image Popup
-    const [selectedCard, setSelectedCard] = React.useState(null);
-
-    function handleEditAvatarClick() {
-        setIsEditAvatarOpen(true);
+        }   
     }
 
-    function handleEditProfileClick() {
-        setIsEditProfileOpen(true);
+    handleSetLoggedIn(newLoggedInState) {
+        this.setState({
+            isLoggedIn: newLoggedInState
+        })
     }
 
-    function handleAddPlaceClick() {
-        setIsAddPlaceOpen(true);
+    handleEditAvatarClick() {
+        this.setState({ isEditAvatarOpen: true });
     }
 
-    function handleAuthRegClick(result) {
-        setRegSuccess(result);
-        setIsInfoToolTipOpen(true);
+    handleEditProfileClick() {
+        this.setState({ isEditProfileOpen: true });
     }
 
-    function closeAllPopups() {
-        setIsEditAvatarOpen(false);
-        setIsEditProfileOpen(false);
-        setIsAddPlaceOpen(false);
-        setIsInfoToolTipOpen(false);
-        setSelectedCard(null);
+    handleAddPlaceClick() {
+        this.setState({ isAddPlaceOpen: true });
     }
 
-    function handleCardClick(card) {
-        setSelectedCard(card);
+    handleAuthRegClick(result) {
+        this.setState({
+            regSuccess: result,
+            isInfoToolTipOpen: true
+        });
     }
 
-    function handleUpdateUser(newInfo) {
+    closeAllPopups() {
+        this.setState({
+            isEditAvatarOpen: false,
+            isEditProfileOpen: false,
+            isAddPlaceOpen: false,
+            isInfoToolTipOpen: false,
+            selectedCard: null
+        });
+    }
+
+    handleCardClick(card) {
+        this.setState({ selectedCard: card });
+    }
+
+    handleUpdateUser(newInfo) {
         api.patchUserInfo(newInfo)
-            .then((res) => { setCurrentUser(res) })
+            .then((res) => { this.setState({ currentUser: res })})
             .catch((err) => { console.log(err) });
     }
 
-    function handleUpdateAvatar(avatar) {
+    handleUpdateAvatar(avatar) {
         api.patchUserPic(avatar)
-            .then((res) => { setCurrentUser(res) })
+            .then((res) => { this.setState({ currentUser: res })})
             .catch((err) => { console.log(err) });
     }
 
-    // Card variables and functions
-
-    // Declaration of hooks that act as state variables for cards
-    const [cards, setCards] = React.useState([]);
-
-    // Effect hook for updating of user info and cards
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then((res) => { setCards(res); })
-            .catch((err) => { console.log(err) });
-    }, []);
-
-    function handleCardLike(card) {
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
+    handleCardLike(card) {
+        const isLiked = card.likes.some(i => i._id === this.state.currentUser._id);
         api.likeCard(card, isLiked)
             .then((res) => {
-                const newCards = cards.map((c) => c._id === card._id ? res : c);
-                setCards(newCards);
+                const newCards = this.state.cards.map((c) => c._id === card._id ? res : c);
+                this.setState({ cards: newCards });
             })
             .catch((err) => { console.log(err) });
     }
 
-    function handleCardDelete(card) {
+    handleCardDelete(card) {
         api.deleteCard(card._id)
             .then(() => {
-                const newCards = cards.filter((c) => c._id !== card._id);
-                setCards(newCards);
+                const newCards = this.state.cards.filter((c) => c._id !== card._id);
+                this.setState({ cards: newCards });
             });
     }
 
-    function handleAddPlace(card) {
+    handleAddPlace(card) {
         api.addNewCard(card)
             .then((res) => {
-                const newCards = [...cards, res];
-                setCards(newCards);
+                const newCards = [...this.state.cards, res];
+                this.setState({ cards: newCards });
             });
     }
 
-    return (
-        <CurrentUserContext.Provider value={currentUser}>
-            <Switch>
-                <ProtectedRoute exact path="/" component={Main} loggedIn={isLoggedIn} userEmail={isLoggedIn} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick}
-                    onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
-                <Route path='/signup'>
-                    <Register onClick={handleAuthRegClick} />
-                </Route>
-                <Route path='/signin'>
-                    <Login onClick={handleAuthRegClick} setUser={setIsLoggedIn} />
-                </Route>
-                <Route path='*'>
-                    <Redirect to="/signin" />
-                </Route>
-            </Switch>
-            
-            {/* Popup ToolTip for Registration/Login */}
-            <InfoToolTip isOpen={isInfoToolTipOpen} success={regSuccess} onClose={closeAllPopups} />    
+    render() {
+        return (
+            <CurrentUserContext.Provider value={this.state.currentUser}>
+                <Switch>
+                    <ProtectedRoute exact path="/" component={Main} loggedIn={this.state.isLoggedIn} userEmail={this.state.userEmail} onEditProfile={this.handleEditProfileClick} onAddPlace={this.handleAddPlaceClick} onEditAvatar={this.handleEditAvatarClick}
+                        onCardClick={this.handleCardClick} onClose={this.closeAllPopups} cards={this.state.cards} onCardLike={this.handleCardLike} onCardDelete={this.handleCardDelete} />
+                    <Route path='/signup'>
+                        <Register onClick={this.handleAuthRegClick} />
+                    </Route>
+                    <Route path='/signin'>
+                        <Login onClick={this.handleAuthRegClick} setLoggedIn={this.handleSetLoggedIn} />
+                    </Route>
+                    <Route path='*'>
+                        <Redirect to="/signin" />
+                    </Route>
+                </Switch>
+                
+                {/* Popup ToolTip for Registration/Login */}
+                <InfoToolTip isOpen={this.state.isInfoToolTipOpen} success={this.state.regSuccess} onClose={this.closeAllPopups} />    
 
-            {/* Popup Edit User Info Form */}
-            <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+                {/* Popup Edit User Info Form */}
+                <EditProfilePopup isOpen={this.state.isEditProfileOpen} onClose={this.closeAllPopups} onUpdateUser={this.handleUpdateUser} />
 
-            {/* Popup Edit User Pic Form */}
-            <EditAvatarPopup isOpen={isEditAvatarOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+                {/* Popup Edit User Pic Form */}
+                <EditAvatarPopup isOpen={this.state.isEditAvatarOpen} onClose={this.closeAllPopups} onUpdateAvatar={this.handleUpdateAvatar} />
 
-            {/* Popup Add Form */}
-            <AddPlacePopup isOpen={isAddPlaceOpen} onClose={closeAllPopups} onAddPlace={handleAddPlace} />
+                {/* Popup Add Form */}
+                <AddPlacePopup isOpen={this.state.isAddPlaceOpen} onClose={this.closeAllPopups} onAddPlace={this.handleAddPlace} />
 
-            {/* Popup Delete Form */}
-            <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={closeAllPopups} />
+                {/* Popup Delete Form */}
+                <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={this.closeAllPopups} />
 
-            {/* Image Popup */}
-            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+                {/* Image Popup */}
+                <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} />
 
-        </CurrentUserContext.Provider>
-    );
+            </CurrentUserContext.Provider>
+        );
+    }
 }
 
-export default App;
+export default withRouter(App);
