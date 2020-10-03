@@ -1,4 +1,3 @@
-
 const BASE_URL = 'https://register.nomoreparties.co';
 
 export const register = (email, password) => {
@@ -9,7 +8,6 @@ export const register = (email, password) => {
         },
         body: JSON.stringify({ "password": password, "email": email })
     }).then((res) => {
-        console.log(res);
         if (res.status === 201) {
             return res.json();
         } else {

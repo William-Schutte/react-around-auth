@@ -28,7 +28,7 @@ class App extends React.Component {
             regSuccess: false,
             selectedCard: null,
             cards: [],
-        }
+        };
         this.handleEditAvatarClick = this.handleEditAvatarClick.bind(this);
         this.handleEditProfileClick = this.handleEditProfileClick.bind(this);
         this.handleAddPlaceClick = this.handleAddPlaceClick.bind(this);
@@ -63,7 +63,10 @@ class App extends React.Component {
         if (jwt) {
             auth.getUser(jwt).then((res) => {
                 if (res) {
-                    this.setState({ isLoggedIn: true });
+                    this.setState({ 
+                        isLoggedIn: true,
+                        userEmail: res.data.email
+                    });
                 }
             }).then(() => {
                 this.props.history.push('/'); ;
@@ -71,9 +74,10 @@ class App extends React.Component {
         }   
     }
 
-    handleSetLoggedIn(newLoggedInState) {
+    handleSetLoggedIn({loggedIn, email}) {
         this.setState({
-            isLoggedIn: newLoggedInState
+            isLoggedIn: loggedIn,
+            userEmail: email
         })
     }
 
@@ -152,8 +156,10 @@ class App extends React.Component {
         return (
             <CurrentUserContext.Provider value={this.state.currentUser}>
                 <Switch>
-                    <ProtectedRoute exact path="/" component={Main} loggedIn={this.state.isLoggedIn} userEmail={this.state.userEmail} onEditProfile={this.handleEditProfileClick} onAddPlace={this.handleAddPlaceClick} onEditAvatar={this.handleEditAvatarClick}
-                        onCardClick={this.handleCardClick} onClose={this.closeAllPopups} cards={this.state.cards} onCardLike={this.handleCardLike} onCardDelete={this.handleCardDelete} />
+                    <ProtectedRoute exact path="/" component={Main} loggedIn={this.state.isLoggedIn} userEmail={this.state.userEmail} 
+                        onEditProfile={this.handleEditProfileClick} onAddPlace={this.handleAddPlaceClick} onEditAvatar={this.handleEditAvatarClick}
+                        onCardClick={this.handleCardClick} onClose={this.closeAllPopups} cards={this.state.cards} onCardLike={this.handleCardLike} 
+                        onCardDelete={this.handleCardDelete} setLoggedIn={this.handleSetLoggedIn}/>
                     <Route path='/signup'>
                         <Register onClick={this.handleAuthRegClick} />
                     </Route>

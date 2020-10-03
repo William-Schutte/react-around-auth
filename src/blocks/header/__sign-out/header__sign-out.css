@@ -1,9 +1,9 @@
-.header__link {
+.header__sign-out {
     height: min-content;
     text-decoration: none;
-    margin: 0 0 0 auto;
+    margin-left: 24px;
     font-weight: normal;
     font-size: 18px;
     line-height: 22px;
-    color: #FFF;
+    color: #A9A9A9;
 }

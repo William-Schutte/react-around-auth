@@ -26,7 +26,7 @@ class Login extends React.Component {
             if (res) {
                 this.setState({ email: '', password: ''},
                 () => { 
-                    this.props.setLoggedIn(true);
+                    this.props.setLoggedIn({ loggedIn: true, email });
                     this.props.history.push('/'); });
             } else {
                 this.props.onClick(false);

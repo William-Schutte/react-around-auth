@@ -6,17 +6,14 @@ Practicum by Yandex
 [View this project here!](https://william-schutte.github.io/react-around-auth/)
 
 ### Overview
-This project represents work from the 10th and 11th projects for the web-dev course. These projects involved converting my JS/CSS/HTML 
-project page into a React page using the Create React App.
-
-This adaptive page includes form validation, interactive popups, fade-in and fade-out animations, functional like and delete buttons,
-modular JavaScript, and Object Oriented JS design.
+This project adds to the foundations of my previous React application. This version includes routes for signing
+in and signing up, and is temporarily connected to an externally run server for user authentication. In the next
+project, I will connect to my own custom API. 
 
 
 ### Techniques
-This page features a responsive design, editable content, multiple popup elements, editable form fields, and transition
-animations.
-Internally, the site is designed under BEM methodology.
+This page stores a JWT to keep users logged in. It uses ReactRouter for navigation as well as state management
+and higher-order components to protect routes and redirect users.
 
 ### Technologies
 * React

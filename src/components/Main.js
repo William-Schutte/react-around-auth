@@ -11,7 +11,7 @@ function Main(props) {
 
     return (
         <>
-        <Header />
+        <Header userEmail={props.userEmail} setLoggedIn={props.setLoggedIn} />
         <main className="content">
             {/* Profile section at top of page, contains three buttons for editing profile and cards */}
             <section className="profile">
