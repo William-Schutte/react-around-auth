@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "eb5f557b5258850d892b03affc72ef82",
+    "revision": "68997d37966f55a6004dfc64af8de83c",
     "url": "/react-around-auth/index.html"
   },
   {
-    "revision": "0a97bd2c8b1df6f685e0",
-    "url": "/react-around-auth/static/css/main.fbeccaa3.chunk.css"
+    "revision": "4edbbfcca3ad2ffde789",
+    "url": "/react-around-auth/static/css/main.9ae82d54.chunk.css"
   },
   {
-    "revision": "27c7f77205b40c524cf9",
-    "url": "/react-around-auth/static/js/2.f428b9e2.chunk.js"
+    "revision": "d49d1946ec141b18180c",
+    "url": "/react-around-auth/static/js/2.c051a64c.chunk.js"
   },
   {
     "revision": "c64c486544348f10a6d6c716950bc223",
-    "url": "/react-around-auth/static/js/2.f428b9e2.chunk.js.LICENSE.txt"
+    "url": "/react-around-auth/static/js/2.c051a64c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "0a97bd2c8b1df6f685e0",
-    "url": "/react-around-auth/static/js/main.99142a67.chunk.js"
+    "revision": "4edbbfcca3ad2ffde789",
+    "url": "/react-around-auth/static/js/main.8c4ce336.chunk.js"
   },
   {
     "revision": "4659e52b22ff7343b9b2",
@@ -70,6 +70,14 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "a8acc871456b1001597672e02c5199ca",
     "url": "/react-around-auth/static/media/heart-icon.a8acc871.svg"
+  },
+  {
+    "revision": "4072126c596bd9485c6e9601f6d4d35d",
+    "url": "/react-around-auth/static/media/reg-failure.4072126c.svg"
+  },
+  {
+    "revision": "e38b395c190826b3bf6d78baff1415a0",
+    "url": "/react-around-auth/static/media/reg-success.e38b395c.svg"
   },
   {
     "revision": "f202ad3053ae4410e6d246994df87581",
