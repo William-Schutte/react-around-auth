@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, NavLink, useRouteMatch, useParams } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import Main from './Main.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
@@ -12,6 +12,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
 import InfoToolTip from './InfoToolTip'
+import * as auth from '../utils/auth.js';
 
 function App() {
 
@@ -25,12 +26,28 @@ function App() {
             .catch((err) => { console.log(err) });
     }, []);
 
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+    React.useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            auth.getUser(jwt).then((res) => {
+                if (res) {
+                    console.log('Made it to the token check on mount')
+                    console.log(isLoggedIn);
+                }
+            }).then(() => {
+                setIsLoggedIn(true);
+            });
+        }
+        
+    });
 
     // Declaration of three hooks that act as state variables for the visibility of each form
     const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
     const [isAddPlaceOpen, setIsAddPlaceOpen] = React.useState(false);
     const [isEditAvatarOpen, setIsEditAvatarOpen] = React.useState(false);
     const [isInfoToolTipOpen, setIsInfoToolTipOpen] = React.useState(false);
+    const [regSuccess, setRegSuccess] = React.useState(false);
 
     // Selected card hook for state of Image Popup
     const [selectedCard, setSelectedCard] = React.useState(null);
@@ -47,7 +64,8 @@ function App() {
         setIsAddPlaceOpen(true);
     }
 
-    function handleAuthRegClick() {
+    function handleAuthRegClick(result) {
+        setRegSuccess(result);
         setIsInfoToolTipOpen(true);
     }
 
@@ -116,18 +134,21 @@ function App() {
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <Switch>
-                <ProtectedRoute exact path="/" component={Main} loggedIn={false} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick}
+                <ProtectedRoute exact path="/" component={Main} loggedIn={isLoggedIn} userEmail={isLoggedIn} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick}
                     onCardClick={handleCardClick} onClose={closeAllPopups} cards={cards} onCardLike={handleCardLike} onCardDelete={handleCardDelete} />
                 <Route path='/signup'>
                     <Register onClick={handleAuthRegClick} />
                 </Route>
                 <Route path='/signin'>
-                    <Login onClick={handleAuthRegClick} />
+                    <Login onClick={handleAuthRegClick} setUser={setIsLoggedIn} />
+                </Route>
+                <Route path='*'>
+                    <Redirect to="/signin" />
                 </Route>
             </Switch>
             
             {/* Popup ToolTip for Registration/Login */}
-            <InfoToolTip isOpen={isInfoToolTipOpen} success={false} onClose={closeAllPopups} />    
+            <InfoToolTip isOpen={isInfoToolTipOpen} success={regSuccess} onClose={closeAllPopups} />    
 
             {/* Popup Edit User Info Form */}
             <EditProfilePopup isOpen={isEditProfileOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />

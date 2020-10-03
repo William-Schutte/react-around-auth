@@ -9,7 +9,12 @@ export const register = (email, password) => {
         },
         body: JSON.stringify({ "password": password, "email": email })
     }).then((res) => {
-        return res.json;
+        console.log(res);
+        if (res.status === 201) {
+            return res.json();
+        } else {
+            throw new Error('Unsuccessful registration');
+        }
     }).catch((err) => console.log(err));
 };
 
@@ -21,10 +26,27 @@ export const authorize = (email, password) => {
         },
         body: JSON.stringify({ "password": password, "email": email })
     }).then((res) => {
-        return res.json;
-    }).then((data) => {
-        if (data.user) {
-            localStorage.setItem('token', data.token)
+        if (res.status === 200) {
+            return res.json();
+        } else {
+            throw new Error('Unsuccessful login');
         }
+    }).then((data) => {
+        localStorage.setItem('jwt', data.token)
+        return true;
     }).catch((err) => console.log(err));
 };
+
+export const getUser = (token) => {
+    return fetch(`${BASE_URL}/users/me`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    }).then((res) => {
+        if (res.status === 200) {
+            return res.json();
+        }
+    })
+}

@@ -24,10 +24,13 @@ class Register extends React.Component {
         const { email, password } = this.state;
         auth.register(email, password).then((res) => {
             if (res) {
+                this.props.onClick(true);
                 this.setState({ email: '', password: ''},
                 () => { this.props.history.push('/signin'); });
+            } else {
+                this.props.onClick(false);
             }
-        })
+        });
     }
 
     render() {
