@@ -30,5 +30,19 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Revisions:
 
-### First Review: 10/7/20
+### First Review: 10/5/20
+Changes by component: 
+* EditProfilePopup: Moved close popup functionality to HandleUpdateUser() function in App
+* EditAvatarPopup: Moved close popup functionality to HandleUpdateAvatar() function in App
+* EditAvatarPopup: Converted to class component to take advantage of state for text field and to clear
+    text on close
+* AddPlacePopup: Changed initial textfield values to empty string instead of null
+* AddPlacePopup: Moved close popup functionality to HandleAddPlace() function in App
+* Header: Moved logOut function to App and passed in through props (all JWT modifications done in App)
+* Login: Moved login function to App and passed through props (all api requests done in App)
+* Register: Moved register function to App and passed through props (all api requests done in App)
+* App: Added catch() blocks to all promises that did not have one
+
+* auth.js: Removed unnecessary catch() blocks
+
 

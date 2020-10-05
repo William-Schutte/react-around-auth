@@ -40,7 +40,9 @@ class App extends React.Component {
         this.handleCardLike = this.handleCardLike.bind(this);
         this.handleCardDelete = this.handleCardDelete.bind(this);
         this.handleAddPlace= this.handleAddPlace.bind(this);
-        this.handleSetLoggedIn = this.handleSetLoggedIn.bind(this);
+        this.handleLogIn = this.handleLogIn.bind(this);
+        this.handleLogOut = this.handleLogOut.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
     }
 
     componentDidMount() {
@@ -69,16 +71,42 @@ class App extends React.Component {
                     });
                 }
             }).then(() => {
-                this.props.history.push('/'); ;
+                this.props.history.push('/');
+            }).catch((err) => { 
+                console.log(err) 
             });
         }   
     }
 
-    handleSetLoggedIn({loggedIn, email}) {
-        this.setState({
-            isLoggedIn: loggedIn,
-            userEmail: email
-        })
+    handleLogIn(email, password) {
+        auth.authorize(email, password).then((res) => {
+            if (res) {
+                this.setState({ isLoggedIn: true, userEmail: email }, 
+                    () => this.props.history.push('/'));
+            } else {
+                this.handleAuthRegClick(false);
+            }
+        }).catch((err) => { 
+            console.log(err) 
+        });
+    }
+
+    handleRegister(email, password) {
+        auth.register(email, password).then((res) => {
+            if (res) {
+                this.handleAuthRegClick(true);
+                this.props.history.push('/signin');
+            } else {
+                this.handleAuthRegClick(false);
+            }
+        }).catch((err) => { 
+            console.log(err) 
+        });
+    }
+
+    handleLogOut() {
+        localStorage.removeItem('jwt');
+        this.setState({ isLoggedIn: false, email: null });
     }
 
     handleEditAvatarClick() {
@@ -116,13 +144,13 @@ class App extends React.Component {
 
     handleUpdateUser(newInfo) {
         api.patchUserInfo(newInfo)
-            .then((res) => { this.setState({ currentUser: res })})
+            .then((res) => { this.setState({ currentUser: res }, this.closeAllPopups())})
             .catch((err) => { console.log(err) });
     }
 
     handleUpdateAvatar(avatar) {
         api.patchUserPic(avatar)
-            .then((res) => { this.setState({ currentUser: res })})
+            .then((res) => { this.setState({ currentUser: res }, this.closeAllPopups())})
             .catch((err) => { console.log(err) });
     }
 
@@ -141,6 +169,8 @@ class App extends React.Component {
             .then(() => {
                 const newCards = this.state.cards.filter((c) => c._id !== card._id);
                 this.setState({ cards: newCards });
+            }).catch((err) => { 
+                console.log(err) 
             });
     }
 
@@ -148,8 +178,11 @@ class App extends React.Component {
         api.addNewCard(card)
             .then((res) => {
                 const newCards = [...this.state.cards, res];
-                this.setState({ cards: newCards });
+                this.setState({ cards: newCards }, this.closeAllPopups());
+            }).catch((err) => { 
+                console.log(err) 
             });
+        
     }
 
     render() {
@@ -159,12 +192,12 @@ class App extends React.Component {
                     <ProtectedRoute exact path="/" component={Main} loggedIn={this.state.isLoggedIn} userEmail={this.state.userEmail} 
                         onEditProfile={this.handleEditProfileClick} onAddPlace={this.handleAddPlaceClick} onEditAvatar={this.handleEditAvatarClick}
                         onCardClick={this.handleCardClick} onClose={this.closeAllPopups} cards={this.state.cards} onCardLike={this.handleCardLike} 
-                        onCardDelete={this.handleCardDelete} setLoggedIn={this.handleSetLoggedIn}/>
+                        onCardDelete={this.handleCardDelete} logOut={this.handleLogOut} />
                     <Route path='/signup'>
-                        <Register onClick={this.handleAuthRegClick} />
+                        <Register register={this.handleRegister} />
                     </Route>
                     <Route path='/signin'>
-                        <Login onClick={this.handleAuthRegClick} setLoggedIn={this.handleSetLoggedIn} />
+                        <Login logIn={this.handleLogIn} />
                     </Route>
                     <Route path='*'>
                         <Redirect to="/signin" />
@@ -178,7 +211,7 @@ class App extends React.Component {
                 <EditProfilePopup isOpen={this.state.isEditProfileOpen} onClose={this.closeAllPopups} onUpdateUser={this.handleUpdateUser} />
 
                 {/* Popup Edit User Pic Form */}
-                <EditAvatarPopup isOpen={this.state.isEditAvatarOpen} onClose={this.closeAllPopups} onUpdateAvatar={this.handleUpdateAvatar} />
+                <EditAvatarPopup isOpen={this.state.isEditAvatarOpen} onClose={this.closeAllPopups} onUpdateAvatar={this.handleUpdateAvatar} currentUser={this.state.currentUser} />
 
                 {/* Popup Add Form */}
                 <AddPlacePopup isOpen={this.state.isAddPlaceOpen} onClose={this.closeAllPopups} onAddPlace={this.handleAddPlace} />

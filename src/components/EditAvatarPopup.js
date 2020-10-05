@@ -1,30 +1,43 @@
 import React from 'react';
 import PopupWithForm from './PopupWithForm.js';
-import CurrentUserContext from '../contexts/CurrentUserContext.js';
 
-function EditAvatarPopup(props) {
-
-    // Import of context value from provider
-    const currentUser = React.useContext(CurrentUserContext);
-
-    // Ref refers to input field DOM node
-    const avatarUrl = React.useRef();
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        props.onUpdateAvatar({ avatar: avatarUrl.current.value });
-        props.onClose();
-        avatarUrl.current.value = null;
+class EditAvatarPopup extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            avatar: ''
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    
+    handleChange(e) {
+        const {value} = e.target
+        this.setState({ avatar: value })
     }
 
-    return (
-        <PopupWithForm name="form-pic" title="Change userpic" isOpen={props.isOpen} btnText="Save" onClose={props.onClose} onSubmit={handleSubmit}>
-            <label className="form__input-field">
-                <input ref={avatarUrl} id="form-name" name="primary" className="form__name form__input" type="url" placeholder={currentUser.avatar} required />
-                <span id="form-name-error" className="form__error"></span>
-            </label>
-        </PopupWithForm>
-    );
+    handleClose() {
+        this.props.onClose();
+        this.setState({ avatar: '' });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        this.props.onUpdateAvatar({ avatar: this.state.avatar });
+        this.setState({ avatar: '' });
+    }
+
+    render() {
+        return (
+            <PopupWithForm name="form-pic" title="Change userpic" isOpen={this.props.isOpen} btnText="Save" onClose={this.handleClose} onSubmit={this.handleSubmit}>
+                <label className="form__input-field">
+                    <input id="form-name" name="primary" className="form__name form__input" type="url" value={this.state.avatar} placeholder={this.props.currentUser.avatar} onChange={this.handleChange} required />
+                    <span id="form-name-error" className="form__error"></span>
+                </label>
+            </PopupWithForm>
+        );
+    };
 }
 
 export default EditAvatarPopup;

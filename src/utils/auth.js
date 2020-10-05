@@ -13,7 +13,7 @@ export const register = (email, password) => {
         } else {
             throw new Error('Unsuccessful registration');
         }
-    }).catch((err) => console.log(err));
+    });
 };
 
 export const authorize = (email, password) => {
@@ -32,7 +32,7 @@ export const authorize = (email, password) => {
     }).then((data) => {
         localStorage.setItem('jwt', data.token)
         return true;
-    }).catch((err) => console.log(err));
+    });
 };
 
 export const getUser = (token) => {

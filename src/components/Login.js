@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import * as auth from '../utils/auth';
 import Header from './Header';
 
 class Login extends React.Component {
@@ -22,16 +21,7 @@ class Login extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         const { email, password } = this.state;
-        auth.authorize(email, password).then((res) => {
-            if (res) {
-                this.setState({ email: '', password: ''},
-                () => { 
-                    this.props.setLoggedIn({ loggedIn: true, email });
-                    this.props.history.push('/'); });
-            } else {
-                this.props.onClick(false);
-            }
-        })
+        this.props.logIn(email, password);
     }
 
     render() {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import * as auth from '../utils/auth';
 import Header from './Header';
 
 class Register extends React.Component {
@@ -9,7 +8,7 @@ class Register extends React.Component {
         this.state = {
             email: '',
             password: ''
-        };
+        }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -22,15 +21,7 @@ class Register extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         const { email, password } = this.state;
-        auth.register(email, password).then((res) => {
-            if (res) {
-                this.props.onClick(true);
-                this.setState({ email: '', password: ''},
-                () => { this.props.history.push('/signin'); });
-            } else {
-                this.props.onClick(false);
-            }
-        });
+        this.props.register(email, password);
     }
 
     render() {

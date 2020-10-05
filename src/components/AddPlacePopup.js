@@ -3,8 +3,8 @@ import PopupWithForm from './PopupWithForm.js';
 
 function AddPlacePopup(props) {
 
-    const [name, setName] = React.useState(null);
-    const [url, setUrl] = React.useState(null);
+    const [name, setName] = React.useState('');
+    const [url, setUrl] = React.useState('');
     
     function handleName(e) {
         setName(e.target.value);
@@ -17,7 +17,6 @@ function AddPlacePopup(props) {
     function handleSubmit(e) {
         e.preventDefault();
         props.onAddPlace({ name: name, link: url });
-        props.onClose();
     }
 
     return (
