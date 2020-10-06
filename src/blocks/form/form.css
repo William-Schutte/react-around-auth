@@ -1,6 +1,6 @@
 @import url('./__container/form__container.css');
 @import url('./__error/form__error.css');
-@import url('./__exit-button/form__exit-button.css');
+@import url('./__exit-btn/form__exit-btn.css');
 @import url('./__name/form__name.css');
 @import url('./__occupation/form__occupation.css');
 @import url('./__place/form__place.css');
@@ -25,4 +25,10 @@
     visibility: hidden;
     opacity: 0;
     transition: visibility .4s linear, opacity .4s ease;
+}
+
+@media screen and (max-width: 600px) {
+    .form {
+        margin: 0px;
+    }
 }

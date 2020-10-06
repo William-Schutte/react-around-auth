@@ -1,9 +1,10 @@
-.form__exit-button {
+.form__exit-btn {
     display: flex;
     position: absolute;
     top: -48px;
     right: -48px;
     background: none;
+    background-size: contain;
     border: 0;
     padding: 0;
     margin: 0;
@@ -13,11 +14,10 @@
 }
 
 @media screen and (max-width: 600px) {
-    .form__exit-button {
-        width: 38px;
-        height: 38px;
-        background-size: contain;
-        top: -30px;
-        right: -30px;
+    .form__exit-btn {
+        width: 42px;
+        height: 42px;
+        top: -54px;
+        right: calc(50% - 21px);
     }
 }

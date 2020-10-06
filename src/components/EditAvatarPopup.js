@@ -5,7 +5,8 @@ class EditAvatarPopup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatar: ''
+            avatar: '',
+            isOpen: this.props.isOpen,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -19,13 +20,17 @@ class EditAvatarPopup extends React.Component {
 
     handleClose() {
         this.props.onClose();
-        this.setState({ avatar: '' });
     }
 
     handleSubmit(e) {
         e.preventDefault();
         this.props.onUpdateAvatar({ avatar: this.state.avatar });
-        this.setState({ avatar: '' });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.isOpen === true && this.props.isOpen === false) {
+            this.setState({ avatar: '' });
+        }
     }
 
     render() {

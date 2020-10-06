@@ -6,7 +6,7 @@ function ImagePopup({ card, onClose }) {
             <div className="picture__column">
                 <img className="picture__img" src={card ? card.link : ''} alt={card ? card.name : ''}/>
                 <h2 className="picture__title">{card && card.name}</h2>
-                <button type="button" aria-label="Close Picture Button" className="form__exit-button btn-animate" onClick={onClose}></button>
+                <button type="button" aria-label="Close Picture Button" className="form__exit-btn btn-animate" onClick={onClose}></button>
             </div>
         </div>
     );

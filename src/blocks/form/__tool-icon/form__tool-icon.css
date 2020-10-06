@@ -10,3 +10,9 @@
     background-size: cover;
     margin: 24px auto 0;
 }
+
+@media screen  and (max-width: 600px) {
+    .form__tool-icon {
+        margin-top: 20px;
+    }
+}

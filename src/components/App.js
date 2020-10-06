@@ -100,6 +100,7 @@ class App extends React.Component {
                 this.handleAuthRegClick(false);
             }
         }).catch((err) => { 
+            this.handleAuthRegClick(false)
             console.log(err) 
         });
     }
