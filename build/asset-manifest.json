@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/react-around-auth/static/css/main.9ae82d54.chunk.css",
-    "main.js": "/react-around-auth/static/js/main.8c4ce336.chunk.js",
-    "main.js.map": "/react-around-auth/static/js/main.8c4ce336.chunk.js.map",
-    "runtime-main.js": "/react-around-auth/static/js/runtime-main.dc4b9052.js",
-    "runtime-main.js.map": "/react-around-auth/static/js/runtime-main.dc4b9052.js.map",
-    "static/js/2.c051a64c.chunk.js": "/react-around-auth/static/js/2.c051a64c.chunk.js",
-    "static/js/2.c051a64c.chunk.js.map": "/react-around-auth/static/js/2.c051a64c.chunk.js.map",
-    "index.html": "/react-around-auth/index.html",
-    "precache-manifest.be04c425bd373e204b5ac162b74e0497.js": "/react-around-auth/precache-manifest.be04c425bd373e204b5ac162b74e0497.js",
-    "service-worker.js": "/react-around-auth/service-worker.js",
-    "static/css/main.9ae82d54.chunk.css.map": "/react-around-auth/static/css/main.9ae82d54.chunk.css.map",
-    "static/js/2.c051a64c.chunk.js.LICENSE.txt": "/react-around-auth/static/js/2.c051a64c.chunk.js.LICENSE.txt",
-    "static/media/index.css": "/react-around-auth/static/media/trash-icon.f202ad30.svg",
-    "static/media/header-logo.svg": "/react-around-auth/static/media/header-logo.8f7611ae.svg"
+    "main.css": "/static/css/main.f2981b07.chunk.css",
+    "main.js": "/static/js/main.e8e4d60e.chunk.js",
+    "main.js.map": "/static/js/main.e8e4d60e.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.0a3c20bd.js",
+    "runtime-main.js.map": "/static/js/runtime-main.0a3c20bd.js.map",
+    "static/js/2.4ab66b18.chunk.js": "/static/js/2.4ab66b18.chunk.js",
+    "static/js/2.4ab66b18.chunk.js.map": "/static/js/2.4ab66b18.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.21cde88b48149523b063551664051438.js": "/precache-manifest.21cde88b48149523b063551664051438.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.f2981b07.chunk.css.map": "/static/css/main.f2981b07.chunk.css.map",
+    "static/js/2.4ab66b18.chunk.js.LICENSE.txt": "/static/js/2.4ab66b18.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/static/media/trash-icon.f202ad30.svg",
+    "static/media/header-logo.svg": "/static/media/header-logo.8f7611ae.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.dc4b9052.js",
-    "static/js/2.c051a64c.chunk.js",
-    "static/css/main.9ae82d54.chunk.css",
-    "static/js/main.8c4ce336.chunk.js"
+    "static/js/runtime-main.0a3c20bd.js",
+    "static/js/2.4ab66b18.chunk.js",
+    "static/css/main.f2981b07.chunk.css",
+    "static/js/main.e8e4d60e.chunk.js"
   ]
 }
