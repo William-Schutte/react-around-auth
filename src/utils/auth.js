@@ -25,7 +25,7 @@ export const authorize = (email, password) => {
         },
         body: JSON.stringify({ "password": password, "email": email })
     }).then((res) => {
-        if (res.status === 200) {
+        if (res.status === 201) {
             return res.json();
         } else {
             throw new Error('Unsuccessful login');
