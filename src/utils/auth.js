@@ -1,4 +1,5 @@
-const BASE_URL = 'https://register.nomoreparties.co';
+//const BASE_URL = 'https://register.nomoreparties.co';
+const BASE_URL = 'https://api.ws.p15.students.nomoreparties.site';
 
 export const register = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {
@@ -6,7 +7,7 @@ export const register = (email, password) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "password": password, "email": email })
+        body: JSON.stringify({ "name": "Name", "about": "About me", "avatar": "https://icon-library.com/images/default-user-icon/default-user-icon-6.jpg", "password": password, "email": email })
     }).then((res) => {
         if (res.status === 201) {
             return res.json();

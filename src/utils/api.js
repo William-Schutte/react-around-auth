@@ -122,11 +122,18 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: "https://around.nomoreparties.co/v1/group-1",
+    baseUrl: "https://api.ws.p15.students.nomoreparties.site",
     headers: {
-        authorization: "b3ddd9c8-cc64-4470-93b1-0840e92522c5",
         "Content-Type": "application/json"
     }
 });
+
+// const api = new Api({
+//     baseUrl: "https://around.nomoreparties.co/v1/group-1",
+//     headers: {
+//         authorization: "b3ddd9c8-cc64-4470-93b1-0840e92522c5",
+//         "Content-Type": "application/json"
+//     }
+// });
 
 export default api;
