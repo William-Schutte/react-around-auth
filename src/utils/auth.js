@@ -25,11 +25,13 @@ export const authorize = (email, password) => {
         },
         body: JSON.stringify({ "password": password, "email": email })
     }).then((res) => {
-        if (res.status === 201) {
-            return res.json();
-        } else {
-            throw new Error('Unsuccessful login');
-        }
+        return res.json();
+
+        // if (res.status === 201) {
+        //     return res.json();
+        // } else {
+        //     throw new Error('Unsuccessful login');
+        // }
     }).then((data) => {
         localStorage.setItem('jwt', data.token)
         return true;
