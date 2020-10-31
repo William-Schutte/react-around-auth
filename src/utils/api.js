@@ -5,9 +5,13 @@ class Api {
       this.options = options;
     }
   
-    getUserInfo() {
+    getUserInfo(token) {
         return fetch(`${this.options.baseUrl}/users/me`, {
-            headers: this.options.headers,
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
         })
           .then(res => {
             if (res.ok) {
@@ -21,6 +25,8 @@ class Api {
     patchUserInfo({ name: newName, about: newAbout }) {
         return fetch(`${this.options.baseUrl}/users/me`, {
             method: "PATCH",
+            credentials: "include",
+            mode: "no-cors",
             headers: this.options.headers,
             body: JSON.stringify({ name: newName, about: newAbout })
         })
@@ -36,6 +42,8 @@ class Api {
     patchUserPic({ avatar: newUrl }) {
         return fetch(`${this.options.baseUrl}/users/me/avatar`, {
             method: "PATCH",
+            credentials: "include",
+            mode: "no-cors",
             headers: this.options.headers,
             body: JSON.stringify({ avatar: newUrl })
         })
@@ -48,9 +56,14 @@ class Api {
             });
     }
 
-    getInitialCards() {
+    getInitialCards(token) {
         return fetch(`${this.options.baseUrl}/cards`, {
-          headers: this.options.headers,
+            credentials: "include",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
         })
           .then(res => {
             if (res.ok) {
@@ -64,6 +77,8 @@ class Api {
     addNewCard({ name: newName, link: newLink }) {
         return fetch(`${this.options.baseUrl}/cards`, {
             method: "POST",
+            credentials: "include",
+            mode: "no-cors",
             headers: this.options.headers,
             body: JSON.stringify({ name: newName, link: newLink })
           })
@@ -79,6 +94,8 @@ class Api {
     deleteCard(cardId) {
         return fetch(`${this.options.baseUrl}/cards/${cardId}`, {
             method: "DELETE",
+            credentials: "include",
+            mode: "no-cors",
             headers: this.options.headers,
         })
             .then(res => {
@@ -95,6 +112,8 @@ class Api {
         if (isLiked) {
             return fetch(`${this.options.baseUrl}/cards/likes/${cardData._id}`, {
                 method: "DELETE",
+                credentials: "include",
+                mode: "no-cors",
                 headers: this.options.headers,
             })
                 .then(res => {
@@ -107,6 +126,8 @@ class Api {
         } else {
             return fetch(`${this.options.baseUrl}/cards/likes/${cardData._id}`, {
                 method: "PUT",
+                credentials: "include",
+                mode: "no-cors",
                 headers: this.options.headers,
             })
                 .then(res => {
@@ -124,7 +145,7 @@ class Api {
 const api = new Api({
     baseUrl: "https://api.ws.p15.students.nomoreparties.site",
     headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 });
 

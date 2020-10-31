@@ -21,19 +21,17 @@ export const authorize = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({ "password": password, "email": email })
     }).then((res) => {
-        return res.json();
-
-        // if (res.status === 201) {
-        //     return res.json();
-        // } else {
-        //     throw new Error('Unsuccessful login');
-        // }
+        if (res.status === 201) {
+            return res.json();
+        } else {
+            throw new Error('Unsuccessful login');
+        }
     }).then((data) => {
-        localStorage.setItem('jwt', data.token)
+        localStorage.setItem('jwt', data.token);
         return true;
     });
 };

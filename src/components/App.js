@@ -46,25 +46,27 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        // Get user info for profile section
-        api.getUserInfo().then((res) => { 
-            this.setState({ currentUser: res}); 
-        }).catch((err) => { 
-            console.log(err) 
-        });
-        
-        // Get initial cards
-        api.getInitialCards().then((res) => { 
-            this.setState({ cards: res}); 
-        }).catch((err) => { 
-            console.log(err) 
-        });
-
         // Check if user has jwt token
         const jwt = localStorage.getItem('jwt');
+
         if (jwt) {
+             // Get user info for profile section
+            api.getUserInfo(jwt).then((res) => { 
+                this.setState({ currentUser: res}); 
+            }).catch((err) => { 
+                console.log(err) 
+            });
+            
+            // Get initial cards
+            api.getInitialCards(jwt).then((res) => { 
+                this.setState({ cards: res}); 
+            }).catch((err) => { 
+                console.log(err) 
+            });
+
             auth.getUser(jwt).then((res) => {
                 if (res) {
+                    console.log(res);
                     this.setState({ 
                         isLoggedIn: true,
                         userEmail: res.data.email
@@ -78,8 +80,25 @@ class App extends React.Component {
         }   
     }
 
+    componentDidUpdate() {
+        const jwt = localStorage.getItem('jwt');
+        // Get user info for profile section
+        api.getUserInfo(jwt).then((res) => { 
+            this.setState({ currentUser: res}); 
+        }).catch((err) => { 
+            console.log(err) 
+        });    
+        // Get initial cards
+        api.getInitialCards(jwt).then((res) => { 
+            this.setState({ cards: res}); 
+        }).catch((err) => { 
+            console.log(err) 
+        });
+    }
+
     handleLogIn(email, password) {
         auth.authorize(email, password).then((res) => {
+            console.log(res);
             if (res) {
                 this.setState({ isLoggedIn: true, userEmail: email }, 
                     () => this.props.history.push('/'));
@@ -94,6 +113,7 @@ class App extends React.Component {
     handleRegister(email, password) {
         auth.register(email, password).then((res) => {
             if (res) {
+                console.log(res);
                 this.handleAuthRegClick(true);
                 this.props.history.push('/signin');
             } else {
@@ -218,7 +238,7 @@ class App extends React.Component {
                 <AddPlacePopup isOpen={this.state.isAddPlaceOpen} onClose={this.closeAllPopups} onAddPlace={this.handleAddPlace} />
 
                 {/* Popup Delete Form */}
-                <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={this.closeAllPopups} />
+                {/* <PopupWithForm name="form-delete" title="Are you sure?" isOpen={null} btnText="Yes" onClose={this.closeAllPopups} /> */}
 
                 {/* Image Popup */}
                 <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} />
