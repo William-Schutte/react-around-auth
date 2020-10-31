@@ -50,26 +50,13 @@ class App extends React.Component {
         const jwt = localStorage.getItem('jwt');
 
         if (jwt) {
-             // Get user info for profile section
-            api.getUserInfo(jwt).then((res) => { 
-                this.setState({ currentUser: res}); 
-            }).catch((err) => { 
-                console.log(err) 
-            });
-            
-            // Get initial cards
-            api.getInitialCards(jwt).then((res) => { 
-                this.setState({ cards: res}); 
-            }).catch((err) => { 
-                console.log(err) 
-            });
-
             auth.getUser(jwt).then((res) => {
                 if (res) {
                     console.log(res);
                     this.setState({ 
                         isLoggedIn: true,
-                        userEmail: res.data.email
+                        userEmail: res.data.email,
+                        currentUser: res.data,
                     });
                 }
             }).then(() => {
@@ -78,23 +65,38 @@ class App extends React.Component {
                 console.log(err) 
             });
         }   
+            //  // Get user info for profile section
+            // api.getUserInfo(jwt).then((res) => { 
+            //     this.setState({ currentUser: res }); 
+            // }).catch((err) => { 
+            //     console.log(err) 
+            // });
+            
+            // Get initial cards
+            api.getInitialCards(jwt).then((res) => { 
+                if (res) {
+                    this.setState({ cards: res});
+                }
+            }).catch((err) => { 
+                console.log(err) 
+            });
     }
 
-    componentDidUpdate() {
-        const jwt = localStorage.getItem('jwt');
-        // Get user info for profile section
-        api.getUserInfo(jwt).then((res) => { 
-            this.setState({ currentUser: res}); 
-        }).catch((err) => { 
-            console.log(err) 
-        });    
-        // Get initial cards
-        api.getInitialCards(jwt).then((res) => { 
-            this.setState({ cards: res}); 
-        }).catch((err) => { 
-            console.log(err) 
-        });
-    }
+    // componentDidUpdate() {
+    //     const jwt = localStorage.getItem('jwt');
+    //     // Get user info for profile section
+    //     api.getUserInfo(jwt).then((res) => { 
+    //         this.setState({ currentUser: res}); 
+    //     }).catch((err) => { 
+    //         console.log(err) 
+    //     });    
+    //     // Get initial cards
+    //     api.getInitialCards(jwt).then((res) => { 
+    //         this.setState({ cards: res}); 
+    //     }).catch((err) => { 
+    //         console.log(err) 
+    //     });
+    // }
 
     handleLogIn(email, password) {
         auth.authorize(email, password).then((res) => {

@@ -6,7 +6,7 @@ class Api {
     }
   
     getUserInfo(token) {
-        return fetch(`${this.options.baseUrl}/users/me`, {
+        return fetch(`${this.options.baseUrl}/user`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -14,8 +14,8 @@ class Api {
             },
         })
           .then(res => {
-            if (res.ok) {
-                return res.json();
+            if (res.status === 200) {
+                return res.json().data;
             } else {
                 return Promise.reject(`Error: ${res.status}`);
             }
@@ -23,7 +23,7 @@ class Api {
     }
 
     patchUserInfo({ name: newName, about: newAbout }) {
-        return fetch(`${this.options.baseUrl}/users/me`, {
+        return fetch(`${this.options.baseUrl}/user/me`, {
             method: "PATCH",
             credentials: "include",
             mode: "no-cors",
@@ -40,7 +40,7 @@ class Api {
     }
 
     patchUserPic({ avatar: newUrl }) {
-        return fetch(`${this.options.baseUrl}/users/me/avatar`, {
+        return fetch(`${this.options.baseUrl}/user/me/avatar`, {
             method: "PATCH",
             credentials: "include",
             mode: "no-cors",
@@ -58,8 +58,7 @@ class Api {
 
     getInitialCards(token) {
         return fetch(`${this.options.baseUrl}/cards`, {
-            credentials: "include",
-            mode: "no-cors",
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
@@ -67,7 +66,7 @@ class Api {
         })
           .then(res => {
             if (res.ok) {
-                return res.json();
+                return res.json().data;
             } else {
                 return Promise.reject(`Error: ${res.status}`);
             }
