@@ -19,9 +19,9 @@ class App extends React.Component {
         super();
         this.state={
             isLoggedIn: null,
-            userEmail: '',
+            userEmail: null,
             currentUser: {},
-            jwt: '',
+            jwt: null,
             isEditProfileOpen: false,
             isAddPlaceOpen: false,
             isEditAvatarOpen: false,
@@ -83,27 +83,18 @@ class App extends React.Component {
             });
     }
 
-    // componentDidUpdate() {
-    //     const jwt = localStorage.getItem('jwt');
-    //     // Get user info for profile section
-    //     api.getUserInfo(jwt).then((res) => { 
-    //         this.setState({ currentUser: res}); 
-    //     }).catch((err) => { 
-    //         console.log(err) 
-    //     });    
-    //     // Get initial cards
-    //     api.getInitialCards(jwt).then((res) => { 
-    //         this.setState({ cards: res}); 
-    //     }).catch((err) => { 
-    //         console.log(err) 
-    //     });
-    // }
-
     handleLogIn(email, password) {
         auth.authorize(email, password).then((res) => {
             if (res) {
-                this.setState({ isLoggedIn: true, userEmail: email }, 
-                    () => this.props.history.push('/'));
+                this.setState({ isLoggedIn: true, userEmail: email, currentUser: res }, 
+                    () => {
+                        api.getInitialCards(localStorage.getItem('jwt')).then((res) => { 
+                            if (res) {
+                                this.setState({ cards: res.data });
+                            }
+                        });
+                        this.props.history.push('/');
+                    });
             } else {
                 this.handleAuthRegClick(false);
             }
@@ -128,7 +119,7 @@ class App extends React.Component {
 
     handleLogOut() {
         localStorage.removeItem('jwt');
-        this.setState({ isLoggedIn: false, email: null });
+        this.setState({ isLoggedIn: false, email: null, currentUser: {} });
     }
 
     handleEditAvatarClick() {
@@ -176,13 +167,10 @@ class App extends React.Component {
             .catch((err) => { console.log(err) });
     }
 
-    // Working on this dude now
     handleCardLike(card) {
         const isLiked = card.likes.some(i => i === this.state.currentUser._id);
         api.likeCard({ card, isLiked, token: this.state.jwt })
             .then((res) => {
-                console.log(res.data);
-                console.log(this.state.currentUser);
                 const newCards = this.state.cards.map((c) => (c._id === card._id) ? res.data : c);
                 this.setState({ cards: newCards });
             })
@@ -190,7 +178,7 @@ class App extends React.Component {
     }
 
     handleCardDelete(card) {
-        api.deleteCard(card._id)
+        api.deleteCard({ cardId: card._id, token: this.state.jwt })
             .then(() => {
                 const newCards = this.state.cards.filter((c) => c._id !== card._id);
                 this.setState({ cards: newCards });

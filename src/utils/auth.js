@@ -7,7 +7,13 @@ export const register = (email, password) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "name": "Name", "about": "About me", "avatar": "https://icon-library.com/images/default-user-icon/default-user-icon-6.jpg", "password": password, "email": email })
+        body: JSON.stringify({
+            "name": "Name",
+            "about": "About me",
+            "avatar": "https://icon-library.com/images/default-user-icon/default-user-icon-6.jpg",
+            "password": password,
+            "email": email,
+        })
     }).then((res) => {
         if (res.status === 201) {
             return res.json();
@@ -32,7 +38,7 @@ export const authorize = (email, password) => {
         }
     }).then((data) => {
         localStorage.setItem('jwt', data.token);
-        return true;
+        return data.user;
     });
 };
 
