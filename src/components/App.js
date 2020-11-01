@@ -21,6 +21,7 @@ class App extends React.Component {
             isLoggedIn: null,
             userEmail: '',
             currentUser: {},
+            jwt: '',
             isEditProfileOpen: false,
             isAddPlaceOpen: false,
             isEditAvatarOpen: false,
@@ -50,9 +51,9 @@ class App extends React.Component {
         const jwt = localStorage.getItem('jwt');
 
         if (jwt) {
+            this.setState({ jwt: jwt });
             auth.getUser(jwt).then((res) => {
                 if (res) {
-                    console.log(res);
                     this.setState({ 
                         isLoggedIn: true,
                         userEmail: res.data.email,
@@ -75,7 +76,7 @@ class App extends React.Component {
             // Get initial cards
             api.getInitialCards(jwt).then((res) => { 
                 if (res) {
-                    this.setState({ cards: res});
+                    this.setState({ cards: res.data });
                 }
             }).catch((err) => { 
                 console.log(err) 
@@ -100,7 +101,6 @@ class App extends React.Component {
 
     handleLogIn(email, password) {
         auth.authorize(email, password).then((res) => {
-            console.log(res);
             if (res) {
                 this.setState({ isLoggedIn: true, userEmail: email }, 
                     () => this.props.history.push('/'));
@@ -115,7 +115,6 @@ class App extends React.Component {
     handleRegister(email, password) {
         auth.register(email, password).then((res) => {
             if (res) {
-                console.log(res);
                 this.handleAuthRegClick(true);
                 this.props.history.push('/signin');
             } else {
@@ -166,22 +165,25 @@ class App extends React.Component {
     }
 
     handleUpdateUser(newInfo) {
-        api.patchUserInfo(newInfo)
-            .then((res) => { this.setState({ currentUser: res }, this.closeAllPopups())})
+        api.patchUserInfo({...newInfo, token: this.state.jwt })
+            .then((res) => { this.setState({ currentUser: res.data }, this.closeAllPopups())})
             .catch((err) => { console.log(err) });
     }
 
     handleUpdateAvatar(avatar) {
-        api.patchUserPic(avatar)
-            .then((res) => { this.setState({ currentUser: res }, this.closeAllPopups())})
+        api.patchUserPic({...avatar, token: this.state.jwt })
+            .then((res) => { this.setState({ currentUser: res.data }, this.closeAllPopups())})
             .catch((err) => { console.log(err) });
     }
 
+    // Working on this dude now
     handleCardLike(card) {
-        const isLiked = card.likes.some(i => i._id === this.state.currentUser._id);
-        api.likeCard(card, isLiked)
+        const isLiked = card.likes.some(i => i === this.state.currentUser._id);
+        api.likeCard({ card, isLiked, token: this.state.jwt })
             .then((res) => {
-                const newCards = this.state.cards.map((c) => c._id === card._id ? res : c);
+                console.log(res.data);
+                console.log(this.state.currentUser);
+                const newCards = this.state.cards.map((c) => (c._id === card._id) ? res.data : c);
                 this.setState({ cards: newCards });
             })
             .catch((err) => { console.log(err) });
@@ -198,14 +200,13 @@ class App extends React.Component {
     }
 
     handleAddPlace(card) {
-        api.addNewCard(card)
+        api.addNewCard({...card, token: this.state.jwt })
             .then((res) => {
-                const newCards = [...this.state.cards, res];
+                const newCards = [...this.state.cards, res.data];
                 this.setState({ cards: newCards }, this.closeAllPopups());
             }).catch((err) => { 
                 console.log(err) 
             });
-        
     }
 
     render() {

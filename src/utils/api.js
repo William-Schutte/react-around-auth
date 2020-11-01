@@ -5,6 +5,7 @@ class Api {
       this.options = options;
     }
   
+    // Function replaced by getUser in auth
     getUserInfo(token) {
         return fetch(`${this.options.baseUrl}/user`, {
             method: "GET",
@@ -22,16 +23,17 @@ class Api {
           });
     }
 
-    patchUserInfo({ name: newName, about: newAbout }) {
+    patchUserInfo({ name: newName, about: newAbout, token }) {
         return fetch(`${this.options.baseUrl}/user/me`, {
             method: "PATCH",
-            credentials: "include",
-            mode: "no-cors",
-            headers: this.options.headers,
-            body: JSON.stringify({ name: newName, about: newAbout })
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ "name": newName, "about": newAbout })
         })
             .then(res => {
-                if (res.ok) {
+                if (res.status === 200) {
                     return res.json();
                 } else {
                     return Promise.reject(`Error: ${res.status}`);
@@ -39,16 +41,17 @@ class Api {
             });
     }
 
-    patchUserPic({ avatar: newUrl }) {
+    patchUserPic({ avatar: newUrl, token }) {
         return fetch(`${this.options.baseUrl}/user/me/avatar`, {
             method: "PATCH",
-            credentials: "include",
-            mode: "no-cors",
-            headers: this.options.headers,
-            body: JSON.stringify({ avatar: newUrl })
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ "avatar": newUrl })
         })
             .then(res => {
-                if (res.ok) {
+                if (res.status === 200) {
                     return res.json();
                 } else {
                     return Promise.reject(`Error: ${res.status}`);
@@ -66,19 +69,20 @@ class Api {
         })
           .then(res => {
             if (res.ok) {
-                return res.json().data;
+                return res.json();
             } else {
                 return Promise.reject(`Error: ${res.status}`);
             }
           });
     }
-    
-    addNewCard({ name: newName, link: newLink }) {
+
+    addNewCard({ name: newName, link: newLink, token }) {
         return fetch(`${this.options.baseUrl}/cards`, {
             method: "POST",
-            credentials: "include",
-            mode: "no-cors",
-            headers: this.options.headers,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
             body: JSON.stringify({ name: newName, link: newLink })
           })
             .then(res => {
@@ -90,12 +94,13 @@ class Api {
             });
     }
 
-    deleteCard(cardId) {
+    deleteCard({ cardId, token }) {
         return fetch(`${this.options.baseUrl}/cards/${cardId}`, {
             method: "DELETE",
-            credentials: "include",
-            mode: "no-cors",
-            headers: this.options.headers,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
         })
             .then(res => {
                 if (res.ok) {
@@ -106,14 +111,16 @@ class Api {
             });
     }
 
-    likeCard(cardData, isLiked) {
+    // And thus working here too
+    likeCard({ card, isLiked, token }) {
         // If the card is already liked by the user, the like is removed, else a like is added
         if (isLiked) {
-            return fetch(`${this.options.baseUrl}/cards/likes/${cardData._id}`, {
+            return fetch(`${this.options.baseUrl}/cards/${card._id}/likes`, {
                 method: "DELETE",
-                credentials: "include",
-                mode: "no-cors",
-                headers: this.options.headers,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             })
                 .then(res => {
                     if (res.ok) {
@@ -123,11 +130,12 @@ class Api {
                     }
                 });
         } else {
-            return fetch(`${this.options.baseUrl}/cards/likes/${cardData._id}`, {
+            return fetch(`${this.options.baseUrl}/cards/${card._id}/likes`, {
                 method: "PUT",
-                credentials: "include",
-                mode: "no-cors",
-                headers: this.options.headers,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
             })
                 .then(res => {
                     if (res.ok) {
@@ -143,9 +151,6 @@ class Api {
 
 const api = new Api({
     baseUrl: "https://api.ws.p15.students.nomoreparties.site",
-    headers: {
-        "Content-Type": "application/json",
-    }
 });
 
 // const api = new Api({

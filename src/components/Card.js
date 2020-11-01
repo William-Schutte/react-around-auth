@@ -6,11 +6,11 @@ function Card(props) {
     const currentUser = React.useContext(CurrentUserContext);
 
     // Code to check if the card is owned by current user and determine the delete buttons visibility
-    const owner = props.card.owner._id === currentUser._id;
+    const owner = props.card.owner === currentUser._id;
     const cardDeleteButtonClasses = `card__delete-button ${owner ? 'card__delete-button_visible' : 'card__delete-button_hidden'}`;
 
     // Checks if the card was liked by the current user
-    const isLiked = props.card.likes.some(i => i._id === currentUser._id);
+    const isLiked = props.card.likes.some(i => i === currentUser._id);
     const cardLikeButtonClasses = `card__fav-button ${isLiked && 'card__fav-button_active'}`;
     
     function handleClick() {
