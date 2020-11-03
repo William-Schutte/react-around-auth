@@ -48,7 +48,6 @@ class App extends React.Component {
     componentDidMount() {
         // Check if user has jwt token
         const jwt = localStorage.getItem('jwt');
-
         if (jwt) {
             this.setState({ jwt: jwt });
             auth.getUser(jwt).then((res) => {
@@ -64,14 +63,7 @@ class App extends React.Component {
             }).catch((err) => { 
                 console.log(err) 
             });
-        }   
-            //  // Get user info for profile section
-            // api.getUserInfo(jwt).then((res) => { 
-            //     this.setState({ currentUser: res }); 
-            // }).catch((err) => { 
-            //     console.log(err) 
-            // });
-            
+        
             // Get initial cards
             api.getInitialCards(jwt).then((res) => { 
                 if (res) {
@@ -80,20 +72,13 @@ class App extends React.Component {
             }).catch((err) => { 
                 console.log(err) 
             });
+        }
     }
 
     handleLogIn(email, password) {
         auth.authorize(email, password).then((res) => {
             if (res) {
-                this.setState({ isLoggedIn: true, userEmail: email, currentUser: res }, 
-                    () => {
-                        api.getInitialCards(localStorage.getItem('jwt')).then((res) => { 
-                            if (res) {
-                                this.setState({ cards: res.data });
-                            }
-                        });
-                        this.props.history.push('/');
-                    });
+                this.componentDidMount();
             } else {
                 this.handleAuthRegClick(false);
             }
