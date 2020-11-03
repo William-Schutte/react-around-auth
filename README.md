@@ -35,6 +35,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Project 15: First Review: 11/2/20
 * Revised handleLogin function in App.js to fix login functionality
+* Changed updateUser and addPlace functions to display Joi validation error response
 
 ### First Review: 10/5/20
 * Added responsive CSS rules for Log In and Sign Up pages for mobile
